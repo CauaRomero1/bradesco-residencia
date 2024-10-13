@@ -42,5 +42,11 @@ public class ProtocoloController {
         Protocolo protocolo = protocoloService.atualizarProtocolo(numeroProtocolo, protocoloAtualizado);
         return ResponseEntity.ok(protocolo);
     }
-}
 
+
+    @PutMapping("/{numeroProtocolo}/mudar-responsavel/{codigoFuncionarioNovo}")
+    public ResponseEntity<Protocolo> mudarResponsavel(@PathVariable String numeroProtocolo, @PathVariable String codigoFuncionarioNovo) {
+        Protocolo protocoloAtualizado = protocoloService.mudarResponsavel(numeroProtocolo, codigoFuncionarioNovo);
+        return ResponseEntity.ok(protocoloAtualizado);
+    }
+}
