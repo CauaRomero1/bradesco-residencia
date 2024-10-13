@@ -36,5 +36,11 @@ public class ProtocoloController {
         return protocolo.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{numeroProtocolo}")
+    public ResponseEntity<Protocolo> atualizarProtocolo(@PathVariable String numeroProtocolo, @RequestBody Protocolo protocoloAtualizado) {
+        Protocolo protocolo = protocoloService.atualizarProtocolo(numeroProtocolo, protocoloAtualizado);
+        return ResponseEntity.ok(protocolo);
+    }
 }
 

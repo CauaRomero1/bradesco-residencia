@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.banco.gerenciamento_protocolo_mongodb.GerenciamentoProtocoloMongodbApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 27.43 s -- in com.banco.gerenciamento_protocolo_mongodb.GerenciamentoProtocoloMongodbApplicationTests
