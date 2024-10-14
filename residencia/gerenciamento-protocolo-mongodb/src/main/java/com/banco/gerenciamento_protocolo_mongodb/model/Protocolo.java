@@ -10,18 +10,18 @@ public class Protocolo {
     @Id
     private String id;
 
-    private String numeroProtocolo;
-    private String tipoProtocolo;
-    private String descricao; // Campo descrição
-    private LocalDate dataAbertura;
-    private LocalDate dataPrazo;
-    private LocalDate dataAlteracao; // Campo para data de alteração
+    private String numeroProtocolo;   // Número único de protocolo
+    private String tipoProtocolo;     // Tipo do protocolo (exemplo: Reclamação, Solicitação)
+    private String descricao;         // Descrição detalhada do protocolo
+    private LocalDate dataAbertura;   // Data de abertura do protocolo
+    private LocalDate dataPrazo;      // Data limite para resolver o protocolo
+    private LocalDate dataAlteracao;  // Data da última alteração no protocolo
+    private Cliente cliente;          // Cliente associado ao protocolo
+    private Funcionario funcionario;  // Funcionário responsável pelo protocolo
+    private String status;            // Status do protocolo (exemplo: Aberto, Fechado, Pendente)
+    private String canal;             // Canal pelo qual o protocolo foi criado (exemplo: Email, Telefone)
 
-    private Cliente cliente;
-    private Funcionario funcionario;
-
-    private String status;
-    private String canal;
+    private String prioridade;        // Prioridade do protocolo (exemplo: Alta, Média, Baixa)
 
     // Getters e Setters
 
@@ -39,6 +39,22 @@ public class Protocolo {
 
     public void setNumeroProtocolo(String numeroProtocolo) {
         this.numeroProtocolo = numeroProtocolo;
+    }
+
+    public String getTipoProtocolo() {
+        return tipoProtocolo;
+    }
+
+    public void setTipoProtocolo(String tipoProtocolo) {
+        this.tipoProtocolo = tipoProtocolo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public LocalDate getDataAbertura() {
@@ -65,23 +81,43 @@ public class Protocolo {
         this.dataAlteracao = dataAlteracao;
     }
 
-    public String getTipoProtocolo() {
-        return tipoProtocolo;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setTipoProtocolo(String tipoProtocolo) {
-        this.tipoProtocolo = tipoProtocolo;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    // Adicionado o getter para descrição
-    public String getDescricao() {
-        return descricao;
+    public Funcionario getFuncionario() {
+        return funcionario;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCanal() {
+        return canal;
+    }
+
+    public void setCanal(String canal) {
+        this.canal = canal;
+    }
+
+    public String getPrioridade() {
+        return prioridade;
+    }
+
+    public void setPrioridade(String prioridade) {
+        this.prioridade = prioridade;
     }
 }
-
-
-
