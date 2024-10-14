@@ -1,8 +1,6 @@
 package com.banco.gerenciamento_protocolo_mongodb.service;
 
-import com.banco.gerenciamento_protocolo_mongodb.model.Funcionario;
 import com.banco.gerenciamento_protocolo_mongodb.model.Protocolo;
-import com.banco.gerenciamento_protocolo_mongodb.repository.FuncionarioRepository;
 import com.banco.gerenciamento_protocolo_mongodb.repository.ProtocoloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,21 +8,21 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ProtocoloService {
 
-    @Autowired
-    private ProtocoloRepository protocoloRepository;
+    private final ProtocoloRepository protocoloRepository;
 
     @Autowired
-    private FuncionarioRepository funcionarioRepository;  // Injeção do repositório de Funcionário
+    public ProtocoloService(ProtocoloRepository protocoloRepository) {
+        this.protocoloRepository = protocoloRepository;
+    }
 
     public Protocolo criarProtocolo(Protocolo protocolo) {
-        protocolo.setNumeroProtocolo(UUID.randomUUID().toString());
         protocolo.setDataAbertura(LocalDate.now());
-        protocolo.setDataPrazo(calcularPrazo(protocolo.getTipoProtocolo()));
+        protocolo.setDataAlteracao(LocalDate.now());
+        protocolo.setPrioridade("Média"); // Definir uma prioridade padrão
         return protocoloRepository.save(protocolo);
     }
 
@@ -37,42 +35,51 @@ public class ProtocoloService {
     }
 
     public Protocolo atualizarProtocolo(String numeroProtocolo, Protocolo protocoloAtualizado) {
-        Optional<Protocolo> optionalProtocolo = protocoloRepository.findByNumeroProtocolo(numeroProtocolo);
-        if (optionalProtocolo.isPresent()) {
-            Protocolo protocoloExistente = optionalProtocolo.get();
+        Optional<Protocolo> protocoloExistenteOpt = protocoloRepository.findByNumeroProtocolo(numeroProtocolo);
+
+        if (protocoloExistenteOpt.isPresent()) {
+            Protocolo protocoloExistente = protocoloExistenteOpt.get();
+
+            // Atualizando os campos
             protocoloExistente.setDescricao(protocoloAtualizado.getDescricao());
-            protocoloExistente.setDataAlteracao(LocalDate.now()); // Atualiza a data de alteração
+            protocoloExistente.setTipoProtocolo(protocoloAtualizado.getTipoProtocolo());
+            protocoloExistente.setDataPrazo(protocoloAtualizado.getDataPrazo());
+            protocoloExistente.setDataAlteracao(LocalDate.now());
+            protocoloExistente.setStatus(protocoloAtualizado.getStatus());
+            protocoloExistente.setCanal(protocoloAtualizado.getCanal());
+            protocoloExistente.setPrioridade(protocoloAtualizado.getPrioridade()); // Atualiza prioridade se necessário
+
             return protocoloRepository.save(protocoloExistente);
+        } else {
+            throw new RuntimeException("Protocolo não encontrado.");
         }
-        throw new RuntimeException("Protocolo não encontrado");
     }
 
     public Protocolo mudarResponsavel(String numeroProtocolo, String codigoFuncionarioNovo) {
-        Optional<Protocolo> optionalProtocolo = protocoloRepository.findByNumeroProtocolo(numeroProtocolo);
-        if (optionalProtocolo.isPresent()) {
-            Protocolo protocolo = optionalProtocolo.get();
+        Optional<Protocolo> protocoloExistenteOpt = protocoloRepository.findByNumeroProtocolo(numeroProtocolo);
 
-            // Buscar o novo funcionário
-            Optional<Funcionario> optionalFuncionario = funcionarioRepository.findById(codigoFuncionarioNovo);
-            if (optionalFuncionario.isPresent()) {
-                Funcionario novoFuncionario = optionalFuncionario.get();
+        if (protocoloExistenteOpt.isPresent()) {
+            Protocolo protocoloExistente = protocoloExistenteOpt.get();
+            // Lógica para alterar o responsável do protocolo
+            protocoloExistente.setDataAlteracao(LocalDate.now());
 
-                // Atualiza o responsável (funcionário)
-                protocolo.setFuncionario(novoFuncionario);
-                protocolo.setDataAlteracao(LocalDate.now());  // Atualiza a data de alteração
-
-                // Salva o protocolo com o novo responsável
-                return protocoloRepository.save(protocolo);
-            } else {
-                throw new RuntimeException("Funcionário não encontrado");
-            }
+            return protocoloRepository.save(protocoloExistente);
         } else {
-            throw new RuntimeException("Protocolo não encontrado");
+            throw new RuntimeException("Protocolo não encontrado.");
         }
     }
 
-    private LocalDate calcularPrazo(String tipoProtocolo) {
-        // Implementação do cálculo de prazo aqui
-        return null;
+    // Método para classificar a prioridade de um protocolo
+    public Protocolo classificarPrioridade(String numeroProtocolo, String novaPrioridade) {
+        Optional<Protocolo> protocoloExistenteOpt = protocoloRepository.findByNumeroProtocolo(numeroProtocolo);
+
+        if (protocoloExistenteOpt.isPresent()) {
+            Protocolo protocoloExistente = protocoloExistenteOpt.get();
+            protocoloExistente.setPrioridade(novaPrioridade);
+            protocoloExistente.setDataAlteracao(LocalDate.now());
+            return protocoloRepository.save(protocoloExistente);
+        } else {
+            throw new RuntimeException("Protocolo não encontrado.");
+        }
     }
 }
