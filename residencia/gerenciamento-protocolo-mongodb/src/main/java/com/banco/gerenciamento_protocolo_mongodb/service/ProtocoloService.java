@@ -23,6 +23,7 @@ public class ProtocoloService {
         protocolo.setDataAbertura(LocalDate.now());
         protocolo.setDataAlteracao(LocalDate.now());
         protocolo.setPrioridade("Média"); // Definir uma prioridade padrão
+        protocolo.definirPrazo(); // Define o prazo com base no tipo de protocolo
         return protocoloRepository.save(protocolo);
     }
 
@@ -83,3 +84,4 @@ public class ProtocoloService {
         }
     }
 }
+
