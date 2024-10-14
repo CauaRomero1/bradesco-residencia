@@ -3,6 +3,9 @@ package com.banco.gerenciamento_protocolo_mongodb.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Document(collection = "protocolos") // Define que essa entidade será armazenada na coleção "protocolos"
 public class Protocolo {
@@ -22,6 +25,25 @@ public class Protocolo {
     private String canal;             // Canal pelo qual o protocolo foi criado (exemplo: Email, Telefone)
 
     private String prioridade;        // Prioridade do protocolo (exemplo: Alta, Média, Baixa)
+
+    // Map para armazenar os tipos de protocolo e seus prazos em dias
+    private static final Map<String, Integer> PRAZOS_POR_TIPO = new HashMap<>();
+
+    static {
+        PRAZOS_POR_TIPO.put("Reclamação", 5);
+        PRAZOS_POR_TIPO.put("Elogio", 10);
+        PRAZOS_POR_TIPO.put("Denúncia", 3);
+    }
+
+    // Método para definir o prazo com base no tipo de protocolo
+    public void definirPrazo() {
+        Integer prazo = PRAZOS_POR_TIPO.get(this.tipoProtocolo);
+        if (prazo != null) {
+            this.dataPrazo = this.dataAbertura.plusDays(prazo);
+        } else {
+            throw new IllegalArgumentException("Tipo de protocolo inválido: " + this.tipoProtocolo);
+        }
+    }
 
     // Getters e Setters
 
@@ -121,3 +143,4 @@ public class Protocolo {
         this.prioridade = prioridade;
     }
 }
+
