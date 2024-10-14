@@ -21,6 +21,9 @@ public class  ProtocoloController {
     }
     @PostMapping
     public Protocolo criarProtocolo(@RequestBody Protocolo protocolo) {
+        if (protocolo.getTipoProtocolo() == null || protocolo.getTipoProtocolo().isEmpty()) {
+            throw new IllegalArgumentException("Tipo de protocolo é obrigatório.");
+        }
         return protocoloService.criarProtocolo(protocolo);
     }
 
