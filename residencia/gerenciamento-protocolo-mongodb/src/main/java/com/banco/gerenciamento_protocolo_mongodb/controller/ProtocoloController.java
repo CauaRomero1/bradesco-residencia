@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/protocolos")
-public class ProtocoloController {
+public class  ProtocoloController {
 
     private final ProtocoloService protocoloService;
 
@@ -19,7 +19,6 @@ public class ProtocoloController {
     public ProtocoloController(ProtocoloService protocoloService) {
         this.protocoloService = protocoloService;
     }
-
     @PostMapping
     public Protocolo criarProtocolo(@RequestBody Protocolo protocolo) {
         return protocoloService.criarProtocolo(protocolo);
@@ -43,10 +42,16 @@ public class ProtocoloController {
         return ResponseEntity.ok(protocolo);
     }
 
-
     @PutMapping("/{numeroProtocolo}/mudar-responsavel/{codigoFuncionarioNovo}")
     public ResponseEntity<Protocolo> mudarResponsavel(@PathVariable String numeroProtocolo, @PathVariable String codigoFuncionarioNovo) {
         Protocolo protocoloAtualizado = protocoloService.mudarResponsavel(numeroProtocolo, codigoFuncionarioNovo);
+        return ResponseEntity.ok(protocoloAtualizado);
+    }
+
+    // Novo endpoint para classificar a prioridade do protocolo
+    @PutMapping("/{numeroProtocolo}/prioridade")
+    public ResponseEntity<Protocolo> classificarPrioridade(@PathVariable String numeroProtocolo, @RequestParam String prioridade) {
+        Protocolo protocoloAtualizado = protocoloService.classificarPrioridade(numeroProtocolo, prioridade);
         return ResponseEntity.ok(protocoloAtualizado);
     }
 }
